@@ -6,7 +6,7 @@ interface LoginPageProps {
   userType: 'institution' | 'student';
 }
 
-const Login: React.FC<LoginPageProps> = ({ userType }) => {
+const LoginPage: React.FC<LoginPageProps> = ({ userType }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -38,4 +38,4 @@ const Login: React.FC<LoginPageProps> = ({ userType }) => {
   );
 };
 
-export default Login;
+export default LoginPage;

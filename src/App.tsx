@@ -3,7 +3,7 @@ import Header from './components/Header/Header';
 import Dashboard from './components/Dashboard/Dashboard';
 import SportsCategories from './components/Sports/SportsCategories';
 import Registration1 from './components/Registration/Registration1';
-import Login from './components/Login/Login';
+import Login from './components/Login/LoginPage';
 import './styles/animations.css'
 
 function App() {
