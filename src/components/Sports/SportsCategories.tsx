@@ -1,4 +1,3 @@
-import React from 'react';
 import SportCard from './SportsCard';
 
 const SportsCategories = () => {
