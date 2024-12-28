@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gradient-start: #4f46e5;
+  --gradient-end: #3b82f6;
+}
+
+body {
+  @apply bg-gray-50;
+}
+
+.sports-gradient {
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+}
