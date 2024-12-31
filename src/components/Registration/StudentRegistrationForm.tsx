@@ -1,48 +1,69 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const sports = [
-  'Cricket', 'Football', 'Table Tennis', 'Basketball',
-  'Tennis', 'Badminton', 'Kabaddi', 'Swimming', 'Tennikoit',
+  'Badminton',  'Swimming', 'Chess', 'Table Tennis', 'basketball'
 ];
 
-export const StudentRegistrationForm = () => {
+const StudentRegistrationForm = () => {
   const [representingType, setRepresentingType] = useState('school');
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
     city: '',
-    sport: '',
-    representing: 'school',
-    institutionOrAcademyName: '',
+    sportsCategory: '',
+    institutionName: '',
     coachName: '',
+    academyName: '',
     competitionLevel: '',
   });
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setSuccessMessage('');
     setErrorMessage('');
 
+    // Prepare the payload based on the representing type
+    const payload = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      city: formData.city,
+      sportsCategory: formData.sportsCategory,
+      competitionLevel: formData.competitionLevel,
+      institutionName: representingType === 'school' ? formData.institutionName : '',
+      academyName: representingType === 'academy' ? formData.academyName : '',
+      coachName: representingType === 'academy' ? formData.coachName : '',
+    };
+
     try {
-      const response = await axios.post('/api/students/register', formData);
+      const response = await axios.post('http://localhost:3000/api/students', payload);
       setSuccessMessage('Student registered successfully!');
+      
       console.log('Response:', response.data);
-    } catch (error: any) {
-      setErrorMessage(error.response?.data?.message || 'Registration failed');
+      setTimeout(() => navigate("/"), 2000)
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setErrorMessage(
+          error.response?.data?.message || 'An error occurred while registering the student.'
+        );
+      } else {
+        setErrorMessage('An error occurred while registering the student.');
+      }
+      console.error('Error:', error);
     } finally {
       setLoading(false);
     }
@@ -74,6 +95,7 @@ export const StudentRegistrationForm = () => {
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               placeholder="First name"
+              required
             />
           </div>
           <div>
@@ -87,6 +109,7 @@ export const StudentRegistrationForm = () => {
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               placeholder="Last name"
+              required
             />
           </div>
         </div>
@@ -100,6 +123,7 @@ export const StudentRegistrationForm = () => {
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             placeholder="Email"
+            required
           />
         </div>
 
@@ -112,6 +136,7 @@ export const StudentRegistrationForm = () => {
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             placeholder="City"
+            required
           />
         </div>
 
@@ -120,13 +145,15 @@ export const StudentRegistrationForm = () => {
             Sport Category
           </label>
           <select
-            name="sport"
-            value={formData.sport}
+            name="sportsCategory"
+            value={formData.sportsCategory}
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            required
           >
+            <option value="">Select a sport</option>
             {sports.map((sport) => (
-              <option key={sport} value={sport.toLowerCase()}>
+              <option key={sport} value={sport}>
                 {sport}
               </option>
             ))}
@@ -141,18 +168,10 @@ export const StudentRegistrationForm = () => {
             <label className="inline-flex items-center">
               <input
                 type="radio"
-                name="representing"
+                name="representingType"
                 value="school"
-                checked={formData.representing === 'school'}
-                onChange={(e) => {
-                  handleChange(e);
-                  setRepresentingType(e.target.value);
-                  setFormData((prev) => ({
-                    ...prev,
-                    coachName: '',
-                    institutionOrAcademyName: '',
-                  }));
-                }}
+                checked={representingType === 'school'}
+                onChange={(e) => setRepresentingType(e.target.value)}
                 className="form-radio text-indigo-600"
               />
               <span className="ml-2">School</span>
@@ -160,17 +179,10 @@ export const StudentRegistrationForm = () => {
             <label className="inline-flex items-center">
               <input
                 type="radio"
-                name="representing"
+                name="representingType"
                 value="academy"
-                checked={formData.representing === 'academy'}
-                onChange={(e) => {
-                  handleChange(e);
-                  setRepresentingType(e.target.value);
-                  setFormData((prev) => ({
-                    ...prev,
-                    institutionOrAcademyName: '',
-                  }));
-                }}
+                checked={representingType === 'academy'}
+                onChange={(e) => setRepresentingType(e.target.value)}
                 className="form-radio text-indigo-600"
               />
               <span className="ml-2">Academy</span>
@@ -186,11 +198,12 @@ export const StudentRegistrationForm = () => {
               </label>
               <input
                 type="text"
-                name="institutionOrAcademyName"
-                value={formData.institutionOrAcademyName}
+                name="academyName"
+                value={formData.academyName}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                 placeholder="Academy Name"
+                required
               />
             </div>
             <div>
@@ -214,11 +227,12 @@ export const StudentRegistrationForm = () => {
             </label>
             <input
               type="text"
-              name="institutionOrAcademyName"
-              value={formData.institutionOrAcademyName}
+              name="institutionName"
+              value={formData.institutionName}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               placeholder="Institution Name"
+              required
             />
           </div>
         )}
@@ -232,7 +246,9 @@ export const StudentRegistrationForm = () => {
             value={formData.competitionLevel}
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            required
           >
+            <option value="">Select competition level</option>
             <option value="international">International</option>
             <option value="national">National</option>
             <option value="state">State</option>
@@ -255,3 +271,4 @@ export const StudentRegistrationForm = () => {
     </motion.div>
   );
 };
+export default StudentRegistrationForm;

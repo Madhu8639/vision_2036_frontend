@@ -1,14 +1,26 @@
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 
 const sports = [
-  'Cricket', 'Football', 'Table Tennis', 'Basketball',
-  'Tennis', 'Badminton', 'Kabaddi', 'Swimming', 'Tennikoit',
+   'Badminton',  'Swimming', 'Chess', 'Table Tennis', 'basketball'
 ];
 
-export const InstitutionRegistrationForm = () => {
-  const [formData, setFormData] = useState({
+interface FormData {
+  institutionName: string;
+  location: string;
+  email: string;
+  sport: string;
+  area: string;
+  contactNumber: string;
+  coachName: string;
+}
+
+export const InstitutionRegistrationForm: React.FC = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState<FormData>({
     institutionName: '',
     location: '',
     email: '',
@@ -18,27 +30,39 @@ export const InstitutionRegistrationForm = () => {
     coachName: '',
   });
 
-  const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ): void => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     setLoading(true);
     setSuccessMessage('');
     setErrorMessage('');
-
     try {
-      const response = await axios.post('/api/institutions/register', formData);
+      const response = await axios.post('http://localhost:3000/api/institutions', {
+        name: formData.institutionName,
+        location: formData.location,
+        mail: formData.email,
+        sport: formData.sport,
+        areaInSqMeters: Number(formData.area),
+        contactNumber: formData.contactNumber,
+        coachName: formData.coachName,
+      });
       setSuccessMessage('Institution registered successfully!');
       console.log('Response:', response.data);
+      setTimeout(() => navigate("/"), 2000)
     } catch (error: any) {
-      setErrorMessage(error.response?.data?.message || 'Registration failed');
+      setErrorMessage(
+        error.response?.data?.message || 'Registration failed. Please try again.'
+      );
     } finally {
       setLoading(false);
     }
@@ -50,14 +74,22 @@ export const InstitutionRegistrationForm = () => {
       animate={{ opacity: 1, y: 0 }}
       className="bg-white rounded-xl shadow-lg p-8"
     >
-      <h2 className="text-2xl font-bold text-gray-800 text-center">Institution Registration Form</h2>
+      <h2 className="text-2xl font-bold text-gray-800 text-center">
+        Institution Registration Form
+      </h2>
       <form onSubmit={handleSubmit} className="space-y-6 mt-5">
-        {errorMessage && <div className="text-red-600 text-sm">{errorMessage}</div>}
-        {successMessage && <div className="text-green-600 text-sm">{successMessage}</div>}
+        {errorMessage && (
+          <div className="text-red-600 text-sm">{errorMessage}</div>
+        )}
+        {successMessage && (
+          <div className="text-green-600 text-sm">{successMessage}</div>
+        )}
 
         {/* Institution Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">Institution Name</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Institution Name
+          </label>
           <input
             type="text"
             name="institutionName"
@@ -65,12 +97,15 @@ export const InstitutionRegistrationForm = () => {
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             placeholder="Enter institution name"
+            required
           />
         </div>
 
         {/* Location */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">Location</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Location
+          </label>
           <input
             type="text"
             name="location"
@@ -78,6 +113,7 @@ export const InstitutionRegistrationForm = () => {
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             placeholder="Enter location"
+            required
           />
         </div>
 
@@ -91,6 +127,7 @@ export const InstitutionRegistrationForm = () => {
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             placeholder="Enter email address"
+            required
           />
         </div>
 
@@ -102,6 +139,7 @@ export const InstitutionRegistrationForm = () => {
             value={formData.sport}
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            required
           >
             <option value="">Select a sport</option>
             {sports.map((sport) => (
@@ -116,18 +154,21 @@ export const InstitutionRegistrationForm = () => {
         <div>
           <label className="block text-sm font-medium text-gray-700">Area</label>
           <input
-            type="text"
+            type="number"
             name="area"
             value={formData.area}
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            placeholder="Enter area"
+            placeholder="Enter area in square meters"
+            required
           />
         </div>
 
         {/* Contact Number */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">Contact Number</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Contact Number
+          </label>
           <input
             type="tel"
             name="contactNumber"
@@ -135,12 +176,15 @@ export const InstitutionRegistrationForm = () => {
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             placeholder="Enter contact number"
+            required
           />
         </div>
 
         {/* Coach Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">Coach Name</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Coach Name
+          </label>
           <input
             type="text"
             name="coachName"
@@ -148,6 +192,7 @@ export const InstitutionRegistrationForm = () => {
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             placeholder="Enter coach name"
+            required
           />
         </div>
 
