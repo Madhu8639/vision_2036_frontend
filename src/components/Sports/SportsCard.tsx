@@ -10,7 +10,7 @@ interface SportCardProps {
 
 const SportCard: React.FC<SportCardProps> = ({ title, description, link, bgColor }) => {
   return (
-    <Link to={link} className="block transform transition-all hover:scale-105">
+    <a href={`https://en.wikipedia.org/wiki/${title}`} className="block transform transition-all hover:scale-105">
       <div className="bg-white rounded-xl shadow-md overflow-hidden h-full">
         <div className={`h-2 ${bgColor}`} />
         <div className="p-5">
@@ -18,7 +18,7 @@ const SportCard: React.FC<SportCardProps> = ({ title, description, link, bgColor
           <p className="text-gray-600 text-sm">{description}</p>
         </div>
       </div>
-    </Link>
+    </a>
   );
 };
 

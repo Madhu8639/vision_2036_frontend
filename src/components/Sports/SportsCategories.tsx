@@ -3,7 +3,7 @@ import SportCard from './SportsCard';
 const SportsCategories = () => {
   const sports = [
     {
-      title: 'Cricket',
+      title: 'Badminton',
       description: 'Join our cricket programs and tournaments',
       link: '/sports/cricket',
       bgColor: 'bg-indigo-500'
@@ -21,8 +21,8 @@ const SportsCategories = () => {
       bgColor: 'bg-violet-500'
     },
     {
-      title: 'Football',
-      description: 'Be part of our football community',
+      title: 'Chess',
+      description: 'Be part of our Chess community',
       link: '/sports/football',
       bgColor: 'bg-purple-500'
     }

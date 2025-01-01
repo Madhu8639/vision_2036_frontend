@@ -23,7 +23,7 @@ function App() {
             <Route path="/institutions/register" element={< Registration1 value='institution'/>} />
             <Route path="/institutions/signin" element={<Login userType='institution' />} />
             <Route path="/students/signin" element={<Login userType='student' />} />
-            <Route path="/sports/:sport" element={<div>Sport Details Page</div>} />
+            {/* <Route path="/sports/:sport" element={<div>Sport Details Page</div>} /> */}
           </Routes>
         </main>
       </div>
