@@ -15,7 +15,7 @@ const PlayersByState = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/institutions'); // Replace with your API URL
+        const response = await axios.get('https://vision-2036-backend.onrender.com/api/institutions'); // Replace with your API URL
         const temp = response.data.reduce((acc: Record<string, number>, curr: { location: string }) => {
           const { location } = curr;
           acc[location] = acc[location] ? acc[location] + 1 : 1;

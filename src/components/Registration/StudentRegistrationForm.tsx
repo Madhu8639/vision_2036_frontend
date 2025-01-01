@@ -50,7 +50,7 @@ const StudentRegistrationForm = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:3000/api/students', payload);
+      const response = await axios.post('https://vision-2036-backend.onrender.com/api/students', payload);
       setSuccessMessage('Student registered successfully!');
       
       console.log('Response:', response.data);

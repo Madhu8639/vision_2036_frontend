@@ -15,8 +15,8 @@ const Dashboard = () => {
   useEffect(()=>{
     const fetchData = async () => {
       try {
-        const response1 = await axios.get('http://localhost:3000/api/students'); // Replace with your API URL
-        const response2 = await axios.get('http://localhost:3000/api/institutions'); // Replace with your API URL 
+        const response1 = await axios.get('https://vision-2036-backend.onrender.com/api/students'); // Replace with your API URL
+        const response2 = await axios.get('https://vision-2036-backend.onrender.com/api/institutions'); // Replace with your API URL 
         setInstitutionsNumber(response2.data.length)
         setPlayersNumber(response1.data.length)
       } catch (err) {

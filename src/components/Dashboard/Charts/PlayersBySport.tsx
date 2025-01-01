@@ -16,8 +16,7 @@ const PlayersBySport = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/students'); // Replace with your API URL
-        const sportsCount = {};
+        const response = await axios.get('https://vision-2036-backend.onrender.com/api/students'); // Replace with your API URL
 
     // Iterate through players and count based on sportsCategory
       const playerData: { [key: string]: number } = {};

@@ -47,7 +47,7 @@ export const InstitutionRegistrationForm: React.FC = () => {
     setSuccessMessage('');
     setErrorMessage('');
     try {
-      const response = await axios.post('http://localhost:3000/api/institutions', {
+      const response = await axios.post('https://vision-2036-backend.onrender.com/api/institutions', {
         name: formData.institutionName,
         location: formData.location,
         mail: formData.email,
