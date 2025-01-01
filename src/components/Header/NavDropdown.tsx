@@ -12,7 +12,7 @@ interface NavDropdownProps {
 }
 
 const NavDropdown: React.FC<NavDropdownProps> = ({ title, links }) => (
-  <div className="group relative">
+  <div className="group relative z-10">
     <button className="py-2 px-3 rounded-lg hover:bg-white/10 transition-colors">
       {title} ▾
     </button>
