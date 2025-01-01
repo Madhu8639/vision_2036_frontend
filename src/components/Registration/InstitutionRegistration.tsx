@@ -12,10 +12,11 @@ interface FormData {
   institutionName: string;
   location: string;
   email: string;
-  sport: string;
+  sport: string[];
   area: string;
   contactNumber: string;
   coachName: string;
+  [key: string]: string | string[];
 }
 
 export const InstitutionRegistrationForm: React.FC = () => {
@@ -24,12 +25,26 @@ export const InstitutionRegistrationForm: React.FC = () => {
     institutionName: '',
     location: '',
     email: '',
-    sport: '',
+    sport: [],
     area: '',
     contactNumber: '',
     coachName: '',
   });
 
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, checked } = event.target;
+    if (checked) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: [...prevFormData[name], value],
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: Array.isArray(prevFormData[name]) ? prevFormData[name].filter((item: string) => item !== value) : [],
+      }));
+    }
+  };
   const [loading, setLoading] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -133,22 +148,25 @@ export const InstitutionRegistrationForm: React.FC = () => {
 
         {/* Sports */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">Sports</label>
-          <select
-            name="sport"
-            value={formData.sport}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            required
-          >
-            <option value="">Select a sport</option>
-            {sports.map((sport) => (
-              <option key={sport} value={sport}>
-                {sport}
-              </option>
-            ))}
-          </select>
-        </div>
+  <label className="block text-sm font-medium text-gray-700">Sports</label>
+  <div className="mt-1">
+    {sports.map((sport) => (
+      <div key={sport} className="flex items-center">
+        <input
+          type="checkbox"
+          name="sport"
+          value={sport}
+          onChange={handleCheckboxChange}
+          checked={formData.sport.includes(sport)}
+          className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+        />
+        <label htmlFor={sport} className="ml-2 block text-sm text-gray-700">
+          {sport}
+        </label>
+      </div>
+    ))}
+  </div>
+</div>
 
         {/* Area */}
         <div>
