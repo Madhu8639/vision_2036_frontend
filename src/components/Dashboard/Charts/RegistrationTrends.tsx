@@ -30,7 +30,7 @@ const RegistrationTrends = () => (
         />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="players" stroke="#3B82F6" strokeWidth={2} />
+        <Line type="monotone" dataKey="players" stroke="#ffc658" strokeWidth={2} />
       </LineChart>
     </ResponsiveContainer>
   </div>

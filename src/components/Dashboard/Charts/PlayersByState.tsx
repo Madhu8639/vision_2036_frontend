@@ -1,4 +1,4 @@
-import { PieChart, Pie, Tooltip, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
@@ -11,6 +11,9 @@ const PlayersByState = () => {
   const [institutionData, setInstitutionData] = useState<InstitutionData[]>([]);
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
+
+  // Define a color palette for the pie chart
+  const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#d0ed57', '#a4de6c', '#8dd1e1'];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,7 +42,6 @@ const PlayersByState = () => {
 
     fetchData();
   }, []);
-  console.log(institutionData);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -52,7 +54,7 @@ const PlayersByState = () => {
   return (
     <div className="bg-white p-4 rounded-xl shadow-md">
       <h3 className="text-lg font-semibold mb-4">Institution Distribution</h3>
-      <ResponsiveContainer width="100%" height="70%">
+      <ResponsiveContainer width="100%" height={200}>
         <PieChart>
           <Pie
             data={institutionData}
@@ -61,9 +63,12 @@ const PlayersByState = () => {
             cx="50%"
             cy="50%"
             outerRadius="80%"
-            fill="#3B82F6"
             label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-          />
+          >
+            {institutionData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
           <Tooltip />
         </PieChart>
       </ResponsiveContainer>
